@@ -1,5 +1,7 @@
 import "./app.css";
 
+import { TipTapEditor } from "./components/TipTapEditor";
+
 function App() {
 	return (
 		<div className="min-h-screen bg-gray-50 py-8">
@@ -7,6 +9,7 @@ function App() {
 				<h1 className="text-3xl font-bold text-gray-900 mb-8">
 					Live Collaboration Editor! 👨‍💻
 				</h1>
+				<TipTapEditor />
 			</div>
 		</div>
 	);
