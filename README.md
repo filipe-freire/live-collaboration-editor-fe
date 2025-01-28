@@ -4,7 +4,7 @@
 
 This repo holds the Frontend for a proof of concept app that aims to demonstrate a possible implementation of a live collaboration feature in a Rich Text Editor environment, using the Web Sockets protocol.
 
-[Click Here For The Backend Repository](https://github.com/filipe-freire/live-collaboration-editor-be/)
+Built to be used with [this backend](https://github.com/filipe-freire/live-collaboration-editor-be/)
 
 ## 🎁 Features
 
@@ -22,8 +22,7 @@ This app was developed using [pnpm](https://pnpm.io/) as its main package manage
 2. Clone this repository into another folder;
 3. Run `pnpm install` or `npm install` in the project's root directory;
 4. `pnpm dev` or `npm run dev` to launch the application in development mode;
-5. `pnpm build` or `npm run build` to build the application for deployment;
-6. `pnpm preview` or `npm run preview` to launch the application in production mode;
+5. Profit! 💰
 
 ### 🛠️ Tools
 
