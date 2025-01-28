@@ -4,5 +4,9 @@ import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-	plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss()],
+  server: {
+    // Allow access from ngrok
+    // allowedHosts: ["random-id.ngrok-free.app"],
+  },
 });
