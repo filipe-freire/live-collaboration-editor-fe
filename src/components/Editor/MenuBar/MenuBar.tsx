@@ -9,79 +9,30 @@ import {
   Palette,
   Type,
 } from "lucide-react";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { ColorPicker } from "./ColorPicker";
-import { FONT_FAMILIES, HIGHLIGHT_COLORS, TEXT_COLORS } from "./constants";
-import { FontPicker } from "./FontPicker";
+import { memo } from "react";
+import { ColorPicker } from "../ColorPicker";
+import { HIGHLIGHT_COLORS, TEXT_COLORS } from "../constants";
+import { FontPicker } from "../FontPicker";
+import { useMenuBar } from "./useMenuBar";
 
-type PickerType = "color" | "highlight" | "font" | null;
+interface IMenuBarProps {
+  editor: Editor;
+}
 
-export const MenuBar = memo(({ editor }: { editor: Editor }) => {
-  const [activePicker, setActivePicker] = useState<PickerType>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setActivePicker(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const toggleHeading = useCallback(() => {
-    editor.chain().focus().toggleHeading({ level: 1 }).run();
-  }, [editor]);
-
-  const toggleBold = useCallback(() => {
-    editor.chain().focus().toggleBold().run();
-  }, [editor]);
-
-  const toggleItalic = useCallback(() => {
-    editor.chain().focus().toggleItalic().run();
-  }, [editor]);
-
-  const toggleBulletList = useCallback(() => {
-    editor.chain().focus().toggleBulletList().run();
-  }, [editor]);
-
-  const toggleOrderedList = useCallback(() => {
-    editor.chain().focus().toggleOrderedList().run();
-  }, [editor]);
-
-  const setColor = useCallback(
-    (color: string) => {
-      editor.chain().focus().setColor(color).run();
-      setActivePicker(null);
-    },
-    [editor],
-  );
-
-  const setHighlight = useCallback(
-    (color: string) => {
-      editor.chain().focus().toggleHighlight({ color }).run();
-      setActivePicker(null);
-    },
-    [editor],
-  );
-
-  const setFontFamily = useCallback(
-    (fontFamily: string) => {
-      editor.chain().focus().setFontFamily(fontFamily).run();
-      setActivePicker(null);
-    },
-    [editor],
-  );
-
-  const togglePicker = useCallback((pickerType: PickerType) => {
-    setActivePicker((current) => (current === pickerType ? null : pickerType));
-  }, []);
-
-  if (!editor) {
-    return null;
-  }
+export const MenuBar = memo(({ editor }: IMenuBarProps) => {
+  const {
+    activePicker,
+    menuRef,
+    setColor,
+    setFontFamily,
+    setHighlight,
+    toggleBold,
+    toggleBulletList,
+    toggleHeading,
+    toggleItalic,
+    toggleOrderedList,
+    togglePicker,
+  } = useMenuBar({ editor });
 
   return (
     <div
@@ -152,11 +103,7 @@ export const MenuBar = memo(({ editor }: { editor: Editor }) => {
           <Type className="h-5 w-5" />
         </button>
         {activePicker === "font" && (
-          <FontPicker
-            fontFamilies={FONT_FAMILIES}
-            onFontSelect={setFontFamily}
-            editor={editor}
-          />
+          <FontPicker onFontSelect={setFontFamily} editor={editor} />
         )}
       </div>
 

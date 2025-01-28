@@ -2,7 +2,7 @@ import { TiptapCollabProvider } from "@hocuspocus/provider";
 import * as Y from "yjs";
 
 import "./app.css";
-import { TipTapEditor } from "./components/Editor/TipTapEditor";
+import { TipTapEditor } from "./components/Editor/TipTapEditor/TipTapEditor";
 
 const ydoc = new Y.Doc();
 const provider = new TiptapCollabProvider({

@@ -1,35 +1,38 @@
-import { TiptapCollabProvider } from "@hocuspocus/provider";
+import { TiptapCollabProvider, WebSocketStatus } from "@hocuspocus/provider";
 import Collaboration from "@tiptap/extension-collaboration";
 import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import Color from "@tiptap/extension-color";
+import { mergeAttributes, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { getRandomColor, getRandomName } from "../../../utils";
+
+import CharacterCount from "@tiptap/extension-character-count";
 import FontFamily from "@tiptap/extension-font-family";
-import Heading from "@tiptap/extension-heading";
+import Heading, { Level } from "@tiptap/extension-heading";
 import Highlight from "@tiptap/extension-highlight";
 import TextStyle from "@tiptap/extension-text-style";
-import { EditorContent, mergeAttributes, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import { SetStateAction, useCallback, useEffect, useState } from "react";
 import * as Y from "yjs";
 
-import CharacterCount from "@tiptap/extension-character-count";
-import { getRandomColor, getRandomName } from "../../utils";
-import { DEFAULT_CONTENT } from "./constants";
-import { MenuBar } from "./MenuBar";
-import { User, UserList } from "./UserList";
+// Default initial content when the document is created for the first time
+const DEFAULT_CONTENT = `
+  <p>Hi 👋, this is a collaborative document.</p>
+  <p>Feel free to edit and collaborate in real-time!</p>
+`;
 
 const getInitialUser = () => ({
   name: getRandomName(),
   color: getRandomColor(),
 });
 
-export function TipTapEditor({
+export function useTipTapEditor({
   provider,
   ydoc,
 }: {
   provider: TiptapCollabProvider;
   ydoc: Y.Doc;
 }) {
-  const [status, setStatus] = useState("connecting");
+  const [status, setStatus] = useState(WebSocketStatus.Connecting);
   const [currentUser, setCurrentUser] = useState(getInitialUser);
 
   const editor = useEditor({
@@ -63,15 +66,15 @@ export function TipTapEditor({
           },
         },
       }),
-      // in order for tip tap to play nice with tailwind 🔽
+      // 🦍 in order for tip tap to play nice with tailwind 🔽
       // source: https://github.com/ueberdosis/tiptap/issues/1514#issuecomment-1573752216
       Heading.extend({
         levels: [1, 2],
         renderHTML({ node, HTMLAttributes }) {
-          // TODO: 🚨 improve type
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-          const level = this.options.levels.includes(node.attrs.level)
-            ? node.attrs.level
+          const nodeAttrLevel = node.attrs.level as Level;
+
+          const level = this.options.levels.includes(nodeAttrLevel)
+            ? nodeAttrLevel
             : this.options.levels[0];
           const classes: Record<number, string> = {
             1: "text-2xl",
@@ -80,8 +83,6 @@ export function TipTapEditor({
           return [
             `h${level}`,
             mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-              // TODO: 🚨 improve type
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               class: `${classes[level]}`,
             }),
             0,
@@ -116,7 +117,9 @@ export function TipTapEditor({
 
   useEffect(() => {
     // Update status changes
-    const statusHandler = (event: { status: SetStateAction<string> }) => {
+    const statusHandler = (event: {
+      status: SetStateAction<WebSocketStatus>;
+    }) => {
       setStatus(event.status);
     };
 
@@ -145,38 +148,10 @@ export function TipTapEditor({
     }
   }, [currentUser]);
 
-  if (!editor) {
-    return "Loading...";
-  }
-
-  // TODO: 🚨 fix type
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-  const userList: User[] = editor.storage.collaborationCursor.users.filter(
-    (u: { name: string; color: string }) => u.name && u.color,
-  );
-
-  return (
-    <div className="rounded-lg border-2 border-solid p-1 shadow-md">
-      <div className="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-4 py-2">
-        <div className="flex flex-col gap-1">
-          <p className="text-sm text-gray-600">
-            Status: {status} {status === "connected" ? "🟢" : "⏳"}
-          </p>
-          <UserList users={userList} />
-        </div>
-        <button
-          className="ml-2 cursor-pointer rounded p-1 px-2 text-sm"
-          style={{
-            backgroundColor: currentUser.color,
-          }}
-          onClick={setName}
-          title="Change Your Name"
-        >
-          📝 {currentUser.name}
-        </button>
-      </div>
-      <MenuBar editor={editor} />
-      <EditorContent editor={editor} className="p-4" />
-    </div>
-  );
+  return {
+    editor,
+    status,
+    currentUser,
+    setName,
+  };
 }
