@@ -3,6 +3,14 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "description": "Frontend powered by Vite, React & TipTap to provide a live collaboration editor environment",
+  "author": "Filipe Freire",
+  "license": "MIT",
+  "keywords": [
+    "hocuspocus",
+    "live-collaboration",
+    "tiptap"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && NODE_ENV=production vite build",
