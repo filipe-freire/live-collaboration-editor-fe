@@ -25,13 +25,12 @@ const getInitialUser = () => ({
   color: getRandomColor(),
 });
 
-export function useTipTapEditor({
-  provider,
-  ydoc,
-}: {
+interface IUseTipTapEditorProps {
   provider: TiptapCollabProvider;
   ydoc: Y.Doc;
-}) {
+}
+
+export function useTipTapEditor({ provider, ydoc }: IUseTipTapEditorProps) {
   const [status, setStatus] = useState(WebSocketStatus.Connecting);
   const [currentUser, setCurrentUser] = useState(getInitialUser);
 

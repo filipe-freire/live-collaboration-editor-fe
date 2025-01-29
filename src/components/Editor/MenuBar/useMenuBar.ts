@@ -3,7 +3,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type PickerType = "color" | "highlight" | "font" | null;
 
-export function useMenuBar({ editor }: { editor: Editor }) {
+interface IUseMenuBar {
+  editor: Editor;
+}
+
+export function useMenuBar({ editor }: IUseMenuBar) {
   const [activePicker, setActivePicker] = useState<PickerType>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
