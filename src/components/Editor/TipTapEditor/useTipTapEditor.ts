@@ -14,10 +14,16 @@ import TextStyle from "@tiptap/extension-text-style";
 import { SetStateAction, useCallback, useEffect, useState } from "react";
 import * as Y from "yjs";
 
-// Default initial content when the document is created for the first time
 const DEFAULT_CONTENT = `
-  <p>Hi 👋, this is a collaborative document.</p>
-  <p>Feel free to edit and collaborate in real-time!</p>
+  <h1>Welcome!</h1>
+  <p>This is a collaborative document.</p>
+  <p>Feel free to edit and <em>collaborate</em> in <strong>real-time!</strong></p>
+  <p>Things you can do:</p>
+  <ul>
+    <li>Brainstorm game night ideas;</li>
+    <li>Write your favorite jokes, so others can have a laugh;</li>
+    <li>Erase everything and start from scratch (you daredevil!)</li>
+  </ul>
 `;
 
 const getInitialUser = () => ({
